@@ -1,4 +1,3 @@
-
 const handleProcessState = (elements, i18nextInstance, processState) => {
   switch (processState) {
     case "filling":
