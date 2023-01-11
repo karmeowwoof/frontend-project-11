@@ -1,6 +1,4 @@
-/* eslint-disable */
-// Generated using webpack-cli https://github.com/webpack/webpack-cli
-
+/* eslint no-underscore-dangle: 0 */
 import path from 'path';
 import { fileURLToPath } from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -14,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const config = {
-  mode: process.env.NODE_ENV || 'development',
+  mode:  'development',
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
