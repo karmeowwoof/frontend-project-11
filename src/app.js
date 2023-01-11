@@ -105,25 +105,28 @@ const runApp = () => {
   const updateRssPosts = () => {
     state.form.urls.forEach((url) => {
       axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
-      .then((updatedResponse) => getParsedRSS(updatedResponse.data.contents))
-      .then((updatedParsedContent) => {
-          const newPosts = updatedParsedContent.posts.filter((post) => !state.visitedPostsId.has(post.id));
-          if (newPosts.length > 0) {
-            state.posts = newPosts.concat(state.posts);
-            render(state, elements, i18nextInstance);
-          }
-      })
-      .catch((err) => {
-          if (err.name === 'AxiosError') {
-            state.form.errors = 'network';
-          } else {
-            state.form.errors = err.message;
-          }
-        });
-      });
-      setTimeout(updateRssPosts, 10000);
-    };
-  }
+        .then((updatedResponse) => getParsedRSS(updatedResponse.data.contents))
+        .then((updatedParsedContent) => {
+            const newPosts = updatedParsedContent.posts.filter((post) => !state.visitedPostsId.has(post.id));
+            if (newPosts.length > 0) {
+              state.posts = newPosts.concat(state.posts);
+              render(state, elements, i18nextInstance);
+            }
+        })
+        .catch((err) => {
+            if (err.name === 'AxiosError') {
+              state.form.errors = 'network';
+            } else {
+              state.form.errors = err.message;
+            }
+          });
+    });
+  };
+  setTimeout(updateRssPosts, 10000);
+  
+
+  };
+
 
 
 export default runApp;

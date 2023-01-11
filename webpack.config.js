@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require('path');
