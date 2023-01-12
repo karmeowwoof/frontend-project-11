@@ -1,11 +1,11 @@
 const handleProcessState = (elements, i18nextInstance, processState) => {
   switch (processState) {
-    case "filling":
+    case 'filling':
       elements.submit.disabled = false;
       break;
-    case "sending":
+    case 'sending':
       elements.submit.disabled = true;
-      elements.feedback.textContent = "";
+      elements.feedback.textContent = '';
       break;
     case "added":
       elements.submit.disabled = false;

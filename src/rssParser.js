@@ -12,7 +12,7 @@ const getParsedRSS = (content) => {
     title: parsedContent.querySelector('title').textContent,
     description: parsedContent.querySelector('description').textContent,
   };
-  
+
   const items = parsedContent.querySelectorAll('item');
   const posts = [...items].map((item) => {
     const itemTitleEl = item.querySelector('title');
@@ -23,7 +23,7 @@ const getParsedRSS = (content) => {
       title: itemTitleEl.textContent,
       description: itemDescriptionEl.textContent,
       link: itemLinkEl.textContent,
-      id: _.uniqueId()
+      id: _.uniqueId(),
     };
   });
 
