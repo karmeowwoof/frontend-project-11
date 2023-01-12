@@ -1,10 +1,8 @@
 /* eslint no-underscore-dangle: 0 */
-import path from 'path';
-import { fileURLToPath } from 'url';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
- 
-
+import path from "path";
+import { fileURLToPath } from "url";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
@@ -12,19 +10,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const config = {
-  mode:  'development',
-  entry: './src/index.js',
+  mode: "development",
+  entry: "./src/index.js",
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "main.js",
+    path: path.resolve(__dirname, "dist"),
   },
   devServer: {
     open: true,
-    host: 'localhost',
+    host: "localhost",
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'index.html',
+      template: "index.html",
     }),
 
     new MiniCssExtractPlugin(),
@@ -34,18 +32,17 @@ const config = {
   ],
   module: {
     rules: [
-      
       {
         test: /\.css$/i,
-        use: [stylesHandler, 'css-loader'],
+        use: [stylesHandler, "css-loader"],
       },
       {
         test: /\.s[ac]ss$/i,
-        use: [stylesHandler, 'css-loader', 'sass-loader'],
+        use: [stylesHandler, "css-loader", "sass-loader"],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: 'asset',
+        type: "asset",
       },
 
       // Add your rules for custom modules here
@@ -55,4 +52,3 @@ const config = {
 };
 
 export default config;
-

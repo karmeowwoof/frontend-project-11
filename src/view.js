@@ -26,7 +26,7 @@ const handleProcessState = (elements, i18nextInstance, processState) => {
   }
 };
 const renderErrors = (elements, i18nextInstance, errorValue) => {
-  if (errorValue === '') {
+  if (errorValue === "") {
     return;
   }
   elements.feedback.classList.remove("text-success");
