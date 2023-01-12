@@ -34,25 +34,18 @@ const runApp = () => {
       notOneOf: 'notOneOf',
     },
   });
-  const input = document.querySelector('#url-input');
-  const form = document.querySelector('.rss-form');
-  const feedback = document.querySelector('.feedback');
-  const submit = document.querySelector('button[type="submit"]');
-  const feeds = document.querySelector('.feeds');
-  const posts = document.querySelector('.posts');
-  const modalTitle = document.querySelector('.modal-title');
-  const modalBody = document.querySelector('.modal-body');
 
   const elements = {
-    input,
-    form,
-    feedback,
-    submit,
-    feeds,
-    posts,
-    modalTitle,
-    modalBody,
+    input: document.querySelector('#url-input'),
+    form: document.querySelector('.rss-form'),
+    feedback: document.querySelector('.feedback'),
+    submit: document.querySelector('button[type="submit"]'),
+    feeds: document.querySelector('.feeds'),
+    posts: document.querySelector('.posts'),
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
   };
+
   const state = onChange(
     defaultState,
     render(defaultState, elements, i18nextInstance),
@@ -64,8 +57,8 @@ const runApp = () => {
     const formData = new FormData(event.target);
     const inputValue = formData.get('url');
     const schema = yup.string().required().url().notOneOf(state.form.urls);
-    schema
-      .validate(inputValue)
+
+    schema.validate(inputValue)
       .then(() => axios.get(
         `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
           inputValue,
@@ -99,9 +92,7 @@ const runApp = () => {
   const goToArticleButton = document.querySelector('.full-article');
   goToArticleButton.addEventListener('click', (event) => {
     event.preventDefault();
-    const currentPost = state.posts.find(
-      (post) => post.id === state.currentPostId,
-    );
+    const currentPost = state.posts.find((post) => post.id === state.currentPostId);
     if (currentPost && currentPost.link) window.open(currentPost.link, '_blank');
   });
 
