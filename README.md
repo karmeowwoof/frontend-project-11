@@ -13,4 +13,5 @@ git clone git@github.com:karmeowwoof/frontend-project-11.git
 make install
 make build
 
-#### Demo [here](https://frontend-project-11-phi-three.vercel.app/)
+
+#### Demo: https://frontend-project-11-phi-three.vercel.app/
