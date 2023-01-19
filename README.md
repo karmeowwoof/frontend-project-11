@@ -5,7 +5,7 @@
 ### RSS-reader
 ### О проекте
 
-Сервис для агрегации RSS-лент. Он позволяет добавлять неограниченное количество RSS-лент, сам их обновляет и добавляет новые записи в общую ленту.
+Service for aggregating RSS feeds that allows you to add an unlimited number of feeds, updates them automatically, and adds new entries to the general feed.
 
 ### Getting started:
 ```

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import onChange from 'on-change';
 import * as yup from 'yup';
 import i18next from 'i18next';
@@ -5,6 +6,21 @@ import axios from 'axios';
 import resources from './locales/index.js';
 import render from './view.js';
 import getParsedRSS from './rssParser.js';
+
+const buildProxiedUrl = (url) => {
+  const proxiedUrl = new URL('https://allorigins.hexlet.app/get');
+  proxiedUrl.searchParams.set('disableCache', 'true');
+  proxiedUrl.searchParams.set('url', url);
+  return proxiedUrl;
+};
+
+const getDownloadedRss = (url) => axios.get(buildProxiedUrl(url));
+
+const setIds = (posts) => posts.map((post) => {
+  const post1 = post;
+  post1.id = _.uniqueId();
+  return post1;
+});
 
 const runApp = () => {
   const defaultLanguage = 'ru';
@@ -44,6 +60,7 @@ const runApp = () => {
     posts: document.querySelector('.posts'),
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
+    goToArticleButton: document.querySelector('.full-article'),
   };
 
   const state = onChange(
@@ -59,13 +76,14 @@ const runApp = () => {
     const schema = yup.string().required().url().notOneOf(state.form.urls);
 
     schema.validate(inputValue)
-      .then(() => axios.get(
-        `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
-          inputValue,
-        )}`,
-      ))
-      .then((response) => getParsedRSS(response.data.contents))
-      .then((parsedContent) => {
+      .then(() => {
+        state.form.errors = '';
+        state.form.processState = 'sending';
+        return getDownloadedRss(inputValue);
+      })
+      .then((response) => {
+        const parsedContent = getParsedRSS(response.data.contents);
+        parsedContent.posts = setIds(parsedContent.posts);
         state.form.urls.unshift(inputValue);
         state.feeds.unshift(parsedContent.feed);
         state.posts = parsedContent.posts.concat(state.posts);
@@ -89,8 +107,7 @@ const runApp = () => {
     state.currentPostId = currentId;
   });
 
-  const goToArticleButton = document.querySelector('.full-article');
-  goToArticleButton.addEventListener('click', (event) => {
+  elements.goToArticleButton.addEventListener('click', (event) => {
     event.preventDefault();
     const currentPost = state.posts.find((post) => post.id === state.currentPostId);
     if (currentPost && currentPost.link) window.open(currentPost.link, '_blank');
@@ -99,13 +116,10 @@ const runApp = () => {
   const updateRssPosts = () => {
     state.form.urls.forEach((url) => {
       axios
-        .get(
-          `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
-            url,
-          )}`,
-        )
-        .then((updatedResponse) => getParsedRSS(updatedResponse.data.contents))
-        .then((updatedParsedContent) => {
+        .get(buildProxiedUrl(url))
+        .then((updatedResponse) => {
+          const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
+          updatedParsedContent.posts = setIds(updatedParsedContent.posts);
           const newPosts = updatedParsedContent.posts.filter(
             (post) => !state.visitedPostsId.has(post.id),
           );
