@@ -3,7 +3,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/d000ec9653c5b7b3feda/maintainability)](https://codeclimate.com/github/karmeowwoof/frontend-project-11/maintainability)
 
 ### RSS-reader
-### О проекте
+### About project
 
 Service for aggregating RSS feeds that allows you to add an unlimited number of feeds, updates them automatically, and adds new entries to the general feed.
 
