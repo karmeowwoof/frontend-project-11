@@ -126,7 +126,6 @@ const runApp = () => {
           if (newPosts.length > 0) {
             state.posts = newPosts.concat(state.posts);
             setIds(newPosts);
-            render(state, elements, i18nextInstance);
           }
         })
         .catch((err) => {
