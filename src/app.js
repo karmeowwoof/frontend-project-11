@@ -1,3 +1,4 @@
+/* eslint-disable */
 import _ from 'lodash';
 import onChange from 'on-change';
 import * as yup from 'yup';
@@ -11,7 +12,7 @@ const buildProxiedUrl = (url) => {
   const proxiedUrl = new URL('https://allorigins.hexlet.app/get');
   proxiedUrl.searchParams.set('disableCache', 'true');
   proxiedUrl.searchParams.set('url', url);
-  return proxiedUrl;
+  return proxiedUrl.toString();
 };
 
 const getDownloadedRss = (url) => axios.get(buildProxiedUrl(url));
@@ -89,7 +90,6 @@ const runApp = () => {
         state.posts = parsedContent.posts.concat(state.posts);
         state.form.errors = '';
         state.form.processState = 'added';
-        render(state, elements, i18nextInstance);
       })
       .catch((err) => {
         state.form.processState = 'error';
@@ -114,17 +114,18 @@ const runApp = () => {
   });
 
   const updateRssPosts = () => {
+    const promises = state.form.urls.map((url) => {
     state.form.urls.forEach((url) => {
       axios
         .get(buildProxiedUrl(url))
         .then((updatedResponse) => {
           const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
-          updatedParsedContent.posts = setIds(updatedParsedContent.posts);
           const newPosts = updatedParsedContent.posts.filter(
             (post) => !state.visitedPostsId.has(post.id),
           );
           if (newPosts.length > 0) {
             state.posts = newPosts.concat(state.posts);
+            setIds(newPosts);
             render(state, elements, i18nextInstance);
           }
         })
@@ -136,8 +137,11 @@ const runApp = () => {
           }
         });
     });
-  };
-  setTimeout(updateRssPosts, 10000);
+  });
+  Promise.all(promises)
+    .finally(() => setTimeout(updateRssPosts, 10000))
+};
+
 };
 
 export default runApp;
