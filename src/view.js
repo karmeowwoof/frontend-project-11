@@ -3,7 +3,6 @@ const handleProcessState = (elements, i18nextInstance, processState) => {
   switch (processState) {
     case 'filling':
       elements.submit.disabled = false;
-      elements.form.reset();
       break;
     case 'sending':
       elements.submit.disabled = true;
