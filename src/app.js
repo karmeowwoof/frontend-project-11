@@ -86,7 +86,7 @@ const runApp = () => {
         state.feeds.unshift(parsedContent.feed);
         state.posts = parsedContent.posts.concat(state.posts);
         state.form.errors = '';
-        state.form.processState = 'filling';
+        state.form.processState = 'added';
       })
       .catch((err) => {
         state.form.processState = 'error';
