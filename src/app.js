@@ -15,14 +15,6 @@ const buildProxiedUrl = (url) => {
   return proxiedUrl.toString();
 };
 
-const getDownloadedRss = (url) => axios.get(buildProxiedUrl(url));
-
-const setIds = (posts) => posts.map((post) => {
-  const post1 = post;
-  post1.id = _.uniqueId();
-  return post1;
-});
-
 const runApp = () => {
   const defaultLanguage = 'ru';
   const i18nextInstance = i18next.createInstance();
@@ -80,16 +72,21 @@ const runApp = () => {
       .then(() => {
         state.form.errors = '';
         state.form.processState = 'sending';
-        return getDownloadedRss(inputValue);
+        const downloadedRss = axios.get(buildProxiedUrl(inputValue));
+        return downloadedRss;
       })
       .then((response) => {
         const parsedContent = getParsedRSS(response.data.contents);
-        parsedContent.posts = setIds(parsedContent.posts);
+        parsedContent.posts.map((post) => {
+          const post1 = post;
+          post1.id = _.uniqueId();
+          return post1;
+        });
         state.form.urls.unshift(inputValue);
         state.feeds.unshift(parsedContent.feed);
         state.posts = parsedContent.posts.concat(state.posts);
         state.form.errors = '';
-        state.form.processState = 'added';
+        state.form.processState = 'filling';
       })
       .catch((err) => {
         state.form.processState = 'error';
@@ -115,32 +112,35 @@ const runApp = () => {
 
   const updateRssPosts = () => {
     const promises = state.form.urls.map((url) => {
-    state.form.urls.forEach((url) => {
-      axios
-        .get(buildProxiedUrl(url))
-        .then((updatedResponse) => {
-          const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
-          const newPosts = updatedParsedContent.posts.filter(
-            (post) => !state.visitedPostsId.has(post.id),
-          );
-          if (newPosts.length > 0) {
-            state.posts = newPosts.concat(state.posts);
-            setIds(newPosts);
-          }
-        })
-        .catch((err) => {
-          if (err.name === 'AxiosError') {
-            state.form.errors = 'network';
-          } else {
-            state.form.errors = err.message;
-          }
-        });
+      state.form.urls.forEach((url) => {
+        axios
+          .get(buildProxiedUrl(url))
+          .then((updatedResponse) => {
+            const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
+            const newPosts = updatedParsedContent.posts.filter(
+              (post) => !state.visitedPostsId.has(post.id),
+            );
+            if (newPosts.length > 0) {
+              state.posts = newPosts.concat(state.posts);
+              newPosts.map((post) => {
+                const post1 = post;
+                post1.id = _.uniqueId();
+                return post1;
+              });
+            }
+          })
+          .catch((err) => {
+            if (err.name === 'AxiosError') {
+              state.form.errors = 'network';
+            } else {
+              state.form.errors = err.message;
+            }
+          });
+      });
     });
-  });
-  Promise.all(promises)
-    .finally(() => setTimeout(updateRssPosts, 10000))
+    Promise.all(promises)
+      .finally(() => setTimeout(() => updateRssPosts(), 5000));
 };
-
 };
 
 export default runApp;
